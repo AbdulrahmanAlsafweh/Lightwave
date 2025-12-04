@@ -1,5 +1,18 @@
-export default function Footer() {
+export default function Footer({ strings, badgeSet = [] }) {
   const year = new Date().getFullYear();
+
+  const {
+    brandName = "Lightwave",
+    brandTagline = "Fiber • Netplay • IPTV",
+    blurb,
+    exploreTitle,
+    exploreLinks = [],
+    servicesTitle,
+    services = [],
+    contactTitle,
+    contact = [],
+    rightsText = `© ${year} Lightwave. All rights reserved.`,
+  } = strings || {};
 
   return (
     <footer className="mt-20 border-t border-slate-200 bg-white">
@@ -15,56 +28,60 @@ export default function Footer() {
                 <div className="relative flex h-full w-full items-center justify-center text-sm font-bold text-brand-primary">LW</div>
               </div>
               <div>
-                <p className="text-lg font-semibold text-slate-900">Lightwave</p>
-                <p className="text-xs text-slate-500">Fiber • Netplay • IPTV</p>
+                <p className="text-lg font-semibold text-slate-900">{brandName}</p>
+                <p className="text-xs text-slate-500">{brandTagline}</p>
               </div>
             </div>
-            <p className="max-w-xs text-sm text-slate-600">
-              Connecting Syria with resilient fiber, local streaming through Netplay, IPTV, and reliable connected products.
-            </p>
-            <div className="flex gap-2">
-              <span className="badge-soft text-[11px]">24/7 support</span>
-              <span className="badge-soft text-[11px]">Syria-wide rollout</span>
-            </div>
+            {blurb ? <p className="max-w-xs text-sm text-slate-600">{blurb}</p> : null}
+            {badgeSet?.length ? (
+              <div className="flex gap-2">
+                {badgeSet.map((badge) => (
+                  <span key={badge} className="badge-soft text-[11px]">
+                    {badge}
+                  </span>
+                ))}
+              </div>
+            ) : null}
           </div>
 
           <div className="space-y-3">
-            <h3 className="text-sm font-semibold text-slate-900">Explore</h3>
+            <h3 className="text-sm font-semibold text-slate-900">{exploreTitle}</h3>
             <ul className="space-y-2 text-sm text-slate-600">
-              <li className="transition hover:text-brand-primary"><a href="/">Home</a></li>
-              <li className="transition hover:text-brand-primary"><a href="/services">Services</a></li>
-              <li className="transition hover:text-brand-primary"><a href="/about">About us</a></li>
-              <li className="transition hover:text-brand-primary"><a href="/contact">Contact</a></li>
+              {exploreLinks.map((link) => (
+                <li key={link.href} className="transition hover:text-brand-primary">
+                  <a href={link.href}>{link.label}</a>
+                </li>
+              ))}
             </ul>
           </div>
 
           <div className="space-y-3">
-            <h3 className="text-sm font-semibold text-slate-900">Services</h3>
+            <h3 className="text-sm font-semibold text-slate-900">{servicesTitle}</h3>
             <ul className="space-y-2 text-sm text-slate-600">
-              <li>Fiber internet (FTTH)</li>
-              <li>Netplay streaming</li>
-              <li>IPTV and live TV</li>
-              <li>Routers & Wi-Fi systems</li>
+              {services.map((item) => (
+                <li key={item}>{item}</li>
+              ))}
             </ul>
           </div>
 
           <div className="space-y-3">
-            <h3 className="text-sm font-semibold text-slate-900">Contact</h3>
+            <h3 className="text-sm font-semibold text-slate-900">{contactTitle}</h3>
             <div className="space-y-2 text-sm text-slate-600">
-              <p>Phone: +963 (0)11 555 1234</p>
-              <p>Email: hello@lightwave.sy</p>
-              <p>HQ: Damascus, Syria</p>
-              <p>Support: 24/7 • Arabic & English</p>
+              {contact.map((line, idx) => (
+                <p key={idx}>{line}</p>
+              ))}
             </div>
           </div>
         </div>
 
         <div className="mt-10 flex flex-col gap-3 border-t border-slate-200 pt-6 text-sm text-slate-500 md:flex-row md:items-center md:justify-between">
-          <p>© {year} Lightwave. All rights reserved.</p>
+          <p>{rightsText}</p>
           <div className="flex flex-wrap gap-2">
-            <span className="badge-soft text-[11px]">Low-latency fiber</span>
-            <span className="badge-soft text-[11px]">SLA for business</span>
-            <span className="badge-soft text-[11px]">Netplay originals</span>
+            {badgeSet.map((badge) => (
+              <span key={badge} className="badge-soft text-[11px]">
+                {badge}
+              </span>
+            ))}
           </div>
         </div>
       </div>

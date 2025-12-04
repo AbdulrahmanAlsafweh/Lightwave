@@ -6,17 +6,23 @@ import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 
-const links = [
-  { name: "Home", href: "/" },
-  { name: "Services", href: "/services" },
-  { name: "About us", href: "/about" },
-  { name: "Contact", href: "/contact" },
-];
-
-export default function Navbar() {
+export default function Navbar({
+  links,
+  ctaLabel,
+  badgeLabel,
+  tagline,
+  brandName = "Lightwave",
+  contactHref = "/contact",
+  showLocaleSwitch = false,
+}) {
   const pathname = usePathname();
   const [open, setOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
+
+  const isArabic = pathname?.startsWith("/ar");
+  const targetPath =
+    isArabic && pathname === "/ar" ? "/" : isArabic ? pathname.replace(/^\/ar/, "") || "/" : `/ar${pathname === "/" ? "" : pathname}`;
+  const localeLabel = isArabic ? "English" : "العربية";
 
   useEffect(() => {
     const handleScroll = () => setScrolled(window.scrollY > 10);
@@ -33,18 +39,18 @@ export default function Navbar() {
       }`}
     >
       <div className="mx-auto flex max-w-6xl items-center justify-between px-6 py-4">
-        <Link href="/" className="group flex items-center gap-3">
+        <Link href={links?.[0]?.href || "/"} className="group flex items-center gap-3">
           <div className="relative h-12 w-12 overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-glow">
-            <Image src="/assets/logo.png" alt="Lightwave logo" fill sizes="48px" className="object-contain p-1.5" />
+            <Image src="/assets/logo.png" alt={`${brandName} logo`} fill sizes="48px" className="object-contain p-1.5" />
           </div>
           <div className="flex flex-col leading-tight">
-            <span className="text-lg font-semibold text-slate-900">Lightwave</span>
-            <span className="text-xs text-slate-500">Fiber • Netplay • IPTV</span>
+            <span className="text-lg font-semibold text-slate-900">{brandName}</span>
+            {tagline ? <span className="text-xs text-slate-500">{tagline}</span> : null}
           </div>
         </Link>
 
         <nav className="hidden items-center gap-6 md:flex">
-          {links.map((link) => {
+          {links?.map((link) => {
             const active = pathname === link.href;
             return (
               <Link
@@ -65,13 +71,21 @@ export default function Navbar() {
         </nav>
 
         <div className="hidden items-center gap-3 md:flex">
-          <span className="badge-soft text-[11px]">Serving Syria</span>
+          {badgeLabel ? <span className="badge-soft text-[11px]">{badgeLabel}</span> : null}
           <Link
-            href="/contact"
+            href={contactHref}
             className="rounded-full bg-brand-primary px-4 py-2 text-sm font-semibold text-white shadow-glow transition hover:-translate-y-0.5 hover:shadow-lg"
           >
-            Get connected
+            {ctaLabel}
           </Link>
+          {showLocaleSwitch ? (
+            <Link
+              href={targetPath}
+              className="rounded-full border border-slate-200 px-3 py-2 text-xs font-semibold text-slate-700 transition hover:border-brand-primary hover:text-brand-primary"
+            >
+              {localeLabel}
+            </Link>
+          ) : null}
         </div>
 
         <button
@@ -105,7 +119,7 @@ export default function Navbar() {
           >
             <div className="border-t border-slate-200 bg-white px-6 pb-6 pt-4 shadow-lg backdrop-blur">
               <div className="flex flex-col gap-4">
-                {links.map((link) => {
+                {links?.map((link) => {
                   const active = pathname === link.href;
                   return (
                     <Link
@@ -120,11 +134,19 @@ export default function Navbar() {
                   );
                 })}
                 <Link
-                  href="/contact"
+                  href={contactHref}
                   className="mt-2 w-full rounded-xl bg-brand-primary px-4 py-3 text-center font-semibold text-white shadow-glow"
                 >
-                  Talk to us
+                  {ctaLabel}
                 </Link>
+                {showLocaleSwitch ? (
+                  <Link
+                    href={targetPath}
+                    className="w-full rounded-xl border border-slate-200 px-4 py-3 text-center text-sm font-semibold text-slate-800 transition hover:border-brand-primary hover:text-brand-primary"
+                  >
+                    {localeLabel}
+                  </Link>
+                ) : null}
               </div>
             </div>
           </motion.nav>

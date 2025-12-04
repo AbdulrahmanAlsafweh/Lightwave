@@ -1,6 +1,4 @@
 import "./globals.css";
-import Navbar from "@/components/Navbar";
-import Footer from "@/components/Footer";
 import { Manrope, Space_Grotesk } from "next/font/google";
 
 const display = Space_Grotesk({ subsets: ["latin"], variable: "--font-display" });
@@ -18,9 +16,7 @@ export default function RootLayout({ children }) {
       <body className="bg-white text-slate-800 antialiased">
         <div className="pointer-events-none fixed inset-0 -z-20 bg-wave-fade opacity-70" aria-hidden="true" />
         <div className="pointer-events-none fixed inset-0 -z-10 bg-grid-light" aria-hidden="true" />
-        <Navbar />
-        <main className="relative z-10">{children}</main>
-        <Footer />
+        {children}
       </body>
     </html>
   );
