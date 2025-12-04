@@ -10,6 +10,7 @@
   box-sizing: border-box;
 }
 
+html,
 body {
   background-color: #f7fafc;
   background-image: radial-gradient(ellipse at 20% 20%, rgba(13, 102, 208, 0.1), transparent 48%),
@@ -18,6 +19,8 @@ body {
   color: #0f172a;
   min-height: 100vh;
   font-family: var(--font-sans), system-ui, sans-serif;
+  overflow-x: hidden; /* prevent stray horizontal scroll from absolutely positioned decor */
+  width: 100%;
 }
 
 @layer base {
