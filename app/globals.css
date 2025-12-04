@@ -1,0 +1,82 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  color-scheme: light;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  background-color: #f7fafc;
+  background-image: radial-gradient(ellipse at 20% 20%, rgba(13, 102, 208, 0.1), transparent 48%),
+    radial-gradient(ellipse at 80% 0%, rgba(31, 135, 233, 0.12), transparent 42%),
+    linear-gradient(180deg, rgba(239, 246, 255, 0.8), rgba(255, 255, 255, 0.9));
+  color: #0f172a;
+  min-height: 100vh;
+  font-family: var(--font-sans), system-ui, sans-serif;
+}
+
+@layer base {
+  body {
+    @apply antialiased text-slate-800;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4 {
+    @apply font-display tracking-tight text-slate-900;
+  }
+}
+
+.glass-panel {
+  background: linear-gradient(145deg, rgba(255, 255, 255, 0.92), rgba(255, 255, 255, 0.82));
+  border: 1px solid rgba(13, 102, 208, 0.12);
+  border-radius: 1.25rem;
+  box-shadow: 0 14px 45px rgba(13, 27, 61, 0.08);
+}
+
+.badge-soft {
+  background: linear-gradient(90deg, rgba(13, 102, 208, 0.12), rgba(31, 135, 233, 0.12));
+  border: 1px solid rgba(13, 102, 208, 0.18);
+  color: #0d66d0;
+  padding: 0.35rem 0.75rem;
+  border-radius: 9999px;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+}
+
+.grid-accent {
+  background-image: linear-gradient(rgba(13, 102, 208, 0.08) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(13, 102, 208, 0.08) 1px, transparent 1px);
+  background-size: 32px 32px;
+  opacity: 0.6;
+}
+
+.shimmer {
+  background-image: linear-gradient(90deg, rgba(255, 255, 255, 0), rgba(255, 255, 255, 0.5), rgba(255, 255, 255, 0));
+  background-size: 200% 100%;
+  animation: shimmer 2.5s linear infinite;
+}
+
+.pattern-bg {
+  background-image: url("/assets/syrian_decoration.svg");
+  background-size: 1000px 1000px;
+  background-repeat: repeat;
+  background-color: #e8f0ff;
+  background-blend-mode: normal;
+  opacity: 0.65;
+}
+
+.pattern-strong {
+  background-image: url("/assets/syrian_decoration.svg");
+  background-size: 100p 100p;
+  background-repeat: repeat;
+  background-color: #e0ebff;
+  background-blend-mode: normal;
+  opacity: 0.75;
+}
