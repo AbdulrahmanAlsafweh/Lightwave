@@ -6,6 +6,22 @@ const sans = Manrope({ subsets: ["latin"], variable: "--font-sans" });
 
 const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://lightwave.sy";
 const metadataBaseUrl = siteUrl.startsWith("http") ? siteUrl : `https://${siteUrl}`;
+const orgJsonLd = {
+  "@context": "https://schema.org",
+  "@type": "Organization",
+  name: "Lightwave",
+  url: metadataBaseUrl,
+  logo: `${metadataBaseUrl.replace(/\/$/, "")}/favicon.png`,
+  contactPoint: [
+    {
+      "@type": "ContactPoint",
+      telephone: "+963115551234",
+      contactType: "customer service",
+      areaServed: "SY",
+      availableLanguage: ["en", "ar"],
+    },
+  ],
+};
 const baseMetadata = {
   title: "Lightwave | Fiber Internet, Netplay & IPTV in Syria",
   description:
@@ -56,6 +72,12 @@ export const metadata = {
 export default function RootLayout({ children }) {
   return (
     <html lang="en" className={`${display.variable} ${sans.variable}`}>
+      <head>
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(orgJsonLd) }}
+        />
+      </head>
       <body className="bg-white text-slate-800 antialiased">
         <div className="pointer-events-none fixed inset-0 -z-20 bg-wave-fade opacity-70" aria-hidden="true" />
         <div className="pointer-events-none fixed inset-0 -z-10 bg-grid-light" aria-hidden="true" />
