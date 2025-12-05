@@ -68,7 +68,7 @@ body {
 
 .pattern-bg {
   background-image: url("/assets/syrian_decoration.svg");
-  background-size: 1000px 1000px;
+  background-size: 1000p 1000p;
   background-repeat: repeat;
   background-color: #e8f0ff;
   background-blend-mode: normal;
@@ -77,7 +77,7 @@ body {
 
 .pattern-strong {
   background-image: url("/assets/syrian_decoration.svg");
-  background-size: 100px 100px;
+  background-size: 100p 100p;
   background-repeat: repeat;
   background-color: #e0ebff;
   background-blend-mode: normal;
