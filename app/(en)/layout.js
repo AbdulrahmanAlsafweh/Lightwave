@@ -10,8 +10,9 @@ const navLinksEn = [
 
 const footerStringsEn = {
   brandName: "Lightwave",
-  brandTagline: "Fiber • Netplay • IPTV",
-  blurb: "Connecting Syria with resilient fiber, local streaming through Netplay, IPTV, and reliable connected products.",
+  brandTagline: "Fiber • Netplay • IPTV • Landline",
+  blurb:
+    "Connecting Syria with resilient fiber, local streaming through Netplay, IPTV, and reliable connected products.",
   exploreTitle: "Explore",
   exploreLinks: [
     { label: "Home", href: "/" },
@@ -20,7 +21,12 @@ const footerStringsEn = {
     { label: "Contact", href: "/contact" },
   ],
   servicesTitle: "Services",
-  services: ["Fiber internet (FTTH)", "Netplay streaming", "IPTV and live TV", "Routers & Wi-Fi systems"],
+  services: [
+    "Fiber internet (FTTH)",
+    "Netplay streaming",
+    "IPTV and live TV",
+    "Routers & Wi-Fi systems",
+  ],
   contactTitle: "Contact",
   contact: [
     "Phone: +963 (0)11 555 1234",
