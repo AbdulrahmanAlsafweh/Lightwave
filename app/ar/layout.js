@@ -5,10 +5,51 @@ import { Noto_Sans_Arabic } from "next/font/google";
 
 const arabicSans = Noto_Sans_Arabic({ subsets: ["arabic"], variable: "--font-sans" });
 const arabicDisplay = Noto_Sans_Arabic({ subsets: ["arabic"], variable: "--font-display" });
+const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://lightwave.sy";
+const metadataBaseUrl = siteUrl.startsWith("http") ? siteUrl : `https://${siteUrl}`;
+const arabicMetadata = {
+  title: "لايت ويف | إنترنت فايبر، نت بلاي و IPTV في سوريا",
+  description:
+    "لايت ويف تقدم إنترنت ألياف ضوئية سريع مع نت بلاي للبث و IPTV وحلول شبكات موثوقة للمنازل والشركات في سوريا.",
+};
 
 export const metadata = {
-  title: "لايت ويف | إنترنت ألياف، نت بلاي و IPTV في سوريا",
-  description: "لايت ويف تقدم إنترنت ألياف، نت بلاي للبث، IPTV ومنتجات متصلة للمنازل والشركات في سوريا.",
+  ...arabicMetadata,
+  metadataBase: new URL(metadataBaseUrl),
+  keywords: [
+    "لايت ويف",
+    "انترنت فايبر سوريا",
+    "نت بلاي",
+    "IPTV سوريا",
+    "انترنت منخفض التأخير",
+    "شبكات أعمال سوريا",
+    "mesh wifi",
+  ],
+  openGraph: {
+    ...arabicMetadata,
+    url: "/ar",
+    siteName: "لايت ويف",
+    locale: "ar_SY",
+    alternateLocale: ["en_US"],
+    type: "website",
+    images: ["/hero/hero-bg.png"],
+  },
+  twitter: {
+    card: "summary_large_image",
+    ...arabicMetadata,
+    images: ["/hero/hero-bg.png"],
+  },
+  alternates: {
+    canonical: "/ar",
+    languages: {
+      "en-US": "/",
+      "ar-SY": "/ar",
+    },
+  },
+  icons: {
+    icon: "/favicon.png",
+    shortcut: "/favicon.png",
+  },
 };
 
 const navLinksAr = [
