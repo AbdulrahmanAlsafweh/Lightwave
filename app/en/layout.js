@@ -2,10 +2,10 @@ import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 
 const navLinksEn = [
-  { name: "Home", href: "/" },
-  { name: "Services", href: "/services" },
-  { name: "About us", href: "/about" },
-  { name: "Contact", href: "/contact" },
+  { name: "Home", href: "/en" },
+  { name: "Services", href: "/en/services" },
+  { name: "About us", href: "/en/about" },
+  { name: "Contact", href: "/en/contact" },
 ];
 
 const footerStringsEn = {
@@ -15,10 +15,10 @@ const footerStringsEn = {
     "Connecting Syria with resilient fiber, local streaming through Netplay, IPTV, and reliable connected products.",
   exploreTitle: "Explore",
   exploreLinks: [
-    { label: "Home", href: "/" },
-    { label: "Services", href: "/services" },
-    { label: "About us", href: "/about" },
-    { label: "Contact", href: "/contact" },
+    { label: "Home", href: "/en" },
+    { label: "Services", href: "/en/services" },
+    { label: "About us", href: "/en/about" },
+    { label: "Contact", href: "/en/contact" },
   ],
   servicesTitle: "Services",
   services: [
@@ -48,7 +48,7 @@ export default function EnglishLayout({ children }) {
         badgeLabel="Serving Syria"
         tagline="Fiber • Netplay • IPTV"
         brandName="Lightwave"
-        contactHref="/contact"
+        contactHref="/en/contact"
         showLocaleSwitch
       />
       <main className="relative z-10">{children}</main>

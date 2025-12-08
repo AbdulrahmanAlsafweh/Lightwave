@@ -180,13 +180,13 @@ export default function Services() {
             </ul>
             <div className="flex flex-wrap gap-3">
               <a
-                href="/contact"
+                href="/en/contact"
                 className="rounded-full bg-brand-primary px-4 py-2 text-sm font-semibold text-white shadow-glow transition hover:-translate-y-0.5"
               >
                 Ask for a Netplay bundle
               </a>
               <a
-                href="/services"
+                href="/en/services"
                 className="rounded-full border border-slate-200 px-4 py-2 text-sm font-semibold text-slate-800 transition hover:border-brand-primary hover:text-brand-primary"
               >
                 All plans
@@ -248,13 +248,13 @@ export default function Services() {
             </ul>
             <div className="flex flex-wrap gap-3">
               <a
-                href="/contact"
+                href="/en/contact"
                 className="rounded-full bg-brand-primary px-4 py-2 text-sm font-semibold text-white shadow-glow transition hover:-translate-y-0.5"
               >
                 Bundle IPTV with fiber
               </a>
               <a
-                href="/services"
+                href="/en/services"
                 className="rounded-full border border-slate-200 px-4 py-2 text-sm font-semibold text-slate-800 transition hover:border-brand-primary hover:text-brand-primary"
               >
                 All plans
@@ -312,13 +312,13 @@ export default function Services() {
             </p>
             <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
               <a
-                href="/contact"
+                href="/en/contact"
                 className="rounded-full bg-brand-primary px-5 py-3 text-sm font-semibold text-white shadow-glow transition hover:-translate-y-0.5"
               >
                 Check coverage
               </a>
               <a
-                href="/about"
+                href="/en/about"
                 className="rounded-full border border-slate-200 px-5 py-3 text-sm font-semibold text-slate-800 transition hover:border-brand-primary hover:text-brand-primary"
               >
                 About our network
@@ -344,13 +344,13 @@ export default function Services() {
           </div>
           <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
             <a
-              href="/contact"
+              href="/en/contact"
               className="rounded-full bg-brand-primary px-5 py-3 text-sm font-semibold text-white shadow-glow transition hover:-translate-y-0.5"
             >
               Talk to Lightwave
             </a>
             <a
-              href="/about"
+              href="/en/about"
               className="rounded-full border border-slate-200 px-5 py-3 text-sm font-semibold text-slate-800 transition hover:border-brand-primary hover:text-brand-primary"
               >
                 About our network

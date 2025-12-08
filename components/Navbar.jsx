@@ -15,14 +15,16 @@ export default function Navbar({
   contactHref = "/contact",
   showLocaleSwitch = false,
 }) {
-  const pathname = usePathname();
+  const pathname = usePathname() || "/";
   const [open, setOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
 
-  const isArabic = pathname?.startsWith("/ar");
-  const targetPath =
-    isArabic && pathname === "/ar" ? "/" : isArabic ? pathname.replace(/^\/ar/, "") || "/" : `/ar${pathname === "/" ? "" : pathname}`;
-  const localeLabel = isArabic ? "English" : "العربية";
+  const isEnglish = pathname.startsWith("/en");
+  const isArabic = pathname.startsWith("/ar");
+  const toArabic = isEnglish ? pathname.replace(/^\/en/, "/ar") || "/ar" : `/ar${pathname === "/" ? "" : pathname}`;
+  const toEnglish = isArabic ? pathname.replace(/^\/ar/, "/en") || "/en" : `/en${pathname === "/" ? "" : pathname}`;
+  const targetPath = isArabic ? toEnglish : toArabic;
+  const localeLabel = isArabic ? "English" : "Arabic";
 
   useEffect(() => {
     const handleScroll = () => setScrolled(window.scrollY > 10);
@@ -155,3 +157,4 @@ export default function Navbar({
     </header>
   );
 }
+

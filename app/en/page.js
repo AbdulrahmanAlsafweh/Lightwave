@@ -116,13 +116,13 @@ export default function Home() {
               className="flex flex-wrap items-center gap-4"
             >
               <Link
-                href="/contact"
+                href="/en/contact"
                 className="rounded-full bg-brand-primary px-5 py-3 text-sm font-semibold text-white shadow-glow transition hover:-translate-y-0.5 hover:shadow-lg"
               >
                 Check availability
               </Link>
               <Link
-                href="/services"
+                href="/en/services"
                 className="rounded-full border border-slate-200 px-5 py-3 text-sm font-semibold text-slate-800 transition hover:border-brand-primary hover:text-brand-primary"
               >
                 Explore services
@@ -209,7 +209,7 @@ export default function Home() {
               </p>
             </div>
             <Link
-              href="/services"
+              href="/en/services"
               className="text-sm font-semibold text-brand-primary hover:text-brand-secondary"
             >
               View detailed services →
@@ -298,7 +298,7 @@ export default function Home() {
               <span className="badge-soft">Parental controls</span>
             </div>
             <Link
-              href="/services"
+              href="/en/services"
               className="inline-flex w-fit items-center gap-2 rounded-full bg-brand-primary px-4 py-3 text-sm font-semibold text-white shadow-glow transition hover:-translate-y-0.5"
             >
               Discover plans
@@ -366,7 +366,7 @@ export default function Home() {
               </p>
             </div>
             <Link
-              href="/contact"
+              href="/en/contact"
               className="text-sm font-semibold text-brand-primary hover:text-brand-secondary"
             >
               Talk with our team →
@@ -508,13 +508,13 @@ export default function Home() {
             </div>
             <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
               <Link
-                href="/contact"
+                href="/en/contact"
                 className="rounded-full bg-brand-primary px-5 py-3 text-sm font-semibold text-white shadow-glow transition hover:-translate-y-0.5"
               >
                 Contact Lightwave
               </Link>
               <Link
-                href="/about"
+                href="/en/about"
                 className="rounded-full border border-slate-200 px-5 py-3 text-sm font-semibold text-slate-800 transition hover:border-brand-primary hover:text-brand-primary"
               >
                 About our team

@@ -6,14 +6,14 @@ const now = new Date();
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const routes = [
-    "/",
-    "/services",
-    "/about",
-    "/contact",
     "/ar",
     "/ar/services",
     "/ar/about",
     "/ar/contact",
+    "/en",
+    "/en/services",
+    "/en/about",
+    "/en/contact",
   ];
 
   return routes.map((path) => ({

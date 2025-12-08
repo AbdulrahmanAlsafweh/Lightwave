@@ -57,9 +57,9 @@ export const metadata = {
     images: ["/hero/hero-bg.png"],
   },
   alternates: {
-    canonical: "/",
+    canonical: "/en",
     languages: {
-      "en-US": "/",
+      "en-US": "/en",
       "ar-SY": "/ar",
     },
   },

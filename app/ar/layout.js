@@ -42,7 +42,7 @@ export const metadata = {
   alternates: {
     canonical: "/ar",
     languages: {
-      "en-US": "/",
+      "en-US": "/en",
       "ar-SY": "/ar",
     },
   },
