@@ -1,10 +1,8 @@
-import { MetadataRoute } from "next";
-
 const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://lightwave.sy";
 const metadataBaseUrl = siteUrl.startsWith("http") ? siteUrl : `https://${siteUrl}`;
 const now = new Date();
 
-export default function sitemap(): MetadataRoute.Sitemap {
+export default function sitemap() {
   const routes = [
     "/ar",
     "/ar/services",
