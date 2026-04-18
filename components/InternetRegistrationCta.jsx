@@ -2,9 +2,11 @@
 
 import { AnimatePresence, motion } from "framer-motion";
 import Link from "next/link";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 
 const REGISTRATION_ENDPOINT = "/api/box-requests";
+const GOOGLE_MAPS_API_KEY = process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY || "";
+const DEFAULT_MAP_CENTER = { lat: 35.93, lng: 36.63 };
 
 const COUNTRY_CODES = [
   { code: "+963", en: "Syria (+963)", ar: "سوريا (+963)" },
@@ -47,7 +49,11 @@ const TEXT = {
     phoneNumber: "Phone Number",
     phoneValidationTitle: "Enter 6 to 20 digits (spaces allowed).",
     openMap: "Open Google Maps",
-    mapHint: "Choose your pin in Google Maps, then paste the link or coordinates to auto-fill latitude and longitude.",
+    mapHint: "Select your home on the map below, or paste a Google Maps link/coordinates.",
+    mapPickerTitle: "Pick your home location",
+    mapPickerHelp: "Click anywhere on the map or drag the marker to set exact latitude and longitude.",
+    mapPickerNotConfigured:
+      "Interactive map picker needs NEXT_PUBLIC_GOOGLE_MAPS_API_KEY. You can still paste a link or coordinates.",
     mapInput: "Google Maps Link or Coordinates",
     mapInputPlaceholder: "Example: https://maps.google.com/... or 34.44240359569981, 35.87057300261932",
     extractCoordinates: "Extract Coordinates",
@@ -94,7 +100,11 @@ const TEXT = {
     phoneNumber: "رقم الهاتف",
     phoneValidationTitle: "أدخل من 6 إلى 20 رقمًا (يمكن استخدام المسافات).",
     openMap: "فتح Google Maps",
-    mapHint: "اختر موقعك في Google Maps ثم الصق الرابط أو الإحداثيات لملء خط العرض وخط الطول تلقائيًا.",
+    mapHint: "حدّد موقع منزلك من الخريطة أدناه، أو الصق رابط Google Maps/الإحداثيات.",
+    mapPickerTitle: "تحديد موقع المنزل",
+    mapPickerHelp: "انقر على الخريطة أو اسحب المؤشر لتحديد خط العرض وخط الطول بدقة.",
+    mapPickerNotConfigured:
+      "ميزة اختيار الموقع من الخريطة تحتاج NEXT_PUBLIC_GOOGLE_MAPS_API_KEY. ما يزال بإمكانك لصق الرابط أو الإحداثيات.",
     mapInput: "رابط Google Maps أو الإحداثيات",
     mapInputPlaceholder: "مثال: https://maps.google.com/... أو 34.44240359569981, 35.87057300261932",
     extractCoordinates: "استخراج الإحداثيات",
@@ -171,12 +181,81 @@ function toNumber(value) {
   return Number.isNaN(parsed) ? null : parsed;
 }
 
+function getInitialMapCenter(latitudeInput, longitudeInput) {
+  const latitude = toNumber(latitudeInput);
+  const longitude = toNumber(longitudeInput);
+
+  if (
+    latitude !== null &&
+    longitude !== null &&
+    Math.abs(latitude) <= 90 &&
+    Math.abs(longitude) <= 180
+  ) {
+    return { lat: latitude, lng: longitude };
+  }
+
+  return DEFAULT_MAP_CENTER;
+}
+
+function loadGoogleMapsScript(apiKey) {
+  if (typeof window === "undefined") {
+    return Promise.reject(new Error("Google Maps can only load in browser."));
+  }
+
+  if (!apiKey) {
+    return Promise.reject(new Error("Missing Google Maps API key."));
+  }
+
+  if (window.google?.maps) {
+    return Promise.resolve(window.google.maps);
+  }
+
+  if (window.__lightwaveGoogleMapsPromise) {
+    return window.__lightwaveGoogleMapsPromise;
+  }
+
+  window.__lightwaveGoogleMapsPromise = new Promise((resolve, reject) => {
+    const existing = document.querySelector('script[data-lightwave-google-maps="true"]');
+
+    if (existing) {
+      existing.addEventListener("load", () => resolve(window.google?.maps));
+      existing.addEventListener("error", () => reject(new Error("Failed to load Google Maps script.")));
+      return;
+    }
+
+    const script = document.createElement("script");
+    script.src = `https://maps.googleapis.com/maps/api/js?key=${apiKey}`;
+    script.async = true;
+    script.defer = true;
+    script.dataset.lightwaveGoogleMaps = "true";
+    script.onload = () => {
+      if (!window.google?.maps) {
+        reject(new Error("Google Maps did not initialize."));
+        return;
+      }
+      resolve(window.google.maps);
+    };
+    script.onerror = () => reject(new Error("Failed to load Google Maps script."));
+
+    document.head.appendChild(script);
+  });
+
+  return window.__lightwaveGoogleMapsPromise;
+}
+
 export default function InternetRegistrationCta({ locale = "en", servicesHref = "/en/services" }) {
   const t = locale === "ar" ? TEXT.ar : TEXT.en;
   const [isOpen, setIsOpen] = useState(false);
   const [form, setForm] = useState(initialForm);
   const [status, setStatus] = useState("idle");
   const [feedback, setFeedback] = useState("");
+  const [mapReady, setMapReady] = useState(false);
+  const [mapError, setMapError] = useState("");
+  const mapContainerRef = useRef(null);
+  const mapRef = useRef(null);
+  const markerRef = useRef(null);
+  const markerDragListenerRef = useRef(null);
+  const mapClickListenerRef = useRef(null);
 
   const phoneCountryOptions = useMemo(
     () => COUNTRY_CODES.map((item) => ({ code: item.code, label: locale === "ar" ? item.ar : item.en })),
@@ -212,6 +291,111 @@ export default function InternetRegistrationCta({ locale = "en", servicesHref = 
       window.removeEventListener("keydown", onKeyDown);
     };
   }, [isOpen]);
+
+  useEffect(() => {
+    if (!isOpen) {
+      return undefined;
+    }
+
+    if (!GOOGLE_MAPS_API_KEY) {
+      setMapReady(false);
+      setMapError(t.mapPickerNotConfigured);
+      return undefined;
+    }
+
+    let cancelled = false;
+
+    loadGoogleMapsScript(GOOGLE_MAPS_API_KEY)
+      .then(() => {
+        if (cancelled || !mapContainerRef.current) {
+          return;
+        }
+
+        const initialCenter = getInitialMapCenter(form.latitude, form.longitude);
+
+        if (!mapRef.current) {
+          mapRef.current = new window.google.maps.Map(mapContainerRef.current, {
+            center: initialCenter,
+            zoom: 14,
+            mapTypeControl: false,
+            streetViewControl: false,
+            fullscreenControl: false,
+          });
+        } else {
+          mapRef.current.setCenter(initialCenter);
+        }
+
+        if (!markerRef.current) {
+          markerRef.current = new window.google.maps.Marker({
+            position: initialCenter,
+            map: mapRef.current,
+            draggable: true,
+          });
+        } else {
+          markerRef.current.setMap(mapRef.current);
+          markerRef.current.setPosition(initialCenter);
+        }
+
+        if (mapClickListenerRef.current) {
+          window.google.maps.event.removeListener(mapClickListenerRef.current);
+        }
+
+        mapClickListenerRef.current = mapRef.current.addListener("click", (event) => {
+          const lat = event.latLng.lat();
+          const lng = event.latLng.lng();
+          markerRef.current?.setPosition({ lat, lng });
+          setStatus("idle");
+          setFeedback("");
+          setForm((previous) => ({
+            ...previous,
+            latitude: String(lat),
+            longitude: String(lng),
+            mapInput: `${lat}, ${lng}`,
+          }));
+        });
+
+        if (markerDragListenerRef.current) {
+          window.google.maps.event.removeListener(markerDragListenerRef.current);
+        }
+
+        markerDragListenerRef.current = markerRef.current.addListener("dragend", (event) => {
+          const lat = event.latLng.lat();
+          const lng = event.latLng.lng();
+          setStatus("idle");
+          setFeedback("");
+          setForm((previous) => ({
+            ...previous,
+            latitude: String(lat),
+            longitude: String(lng),
+            mapInput: `${lat}, ${lng}`,
+          }));
+        });
+
+        setMapReady(true);
+        setMapError("");
+      })
+      .catch((error) => {
+        if (cancelled) {
+          return;
+        }
+        setMapReady(false);
+        setMapError(error?.message || t.mapPickerNotConfigured);
+      });
+
+    return () => {
+      cancelled = true;
+    };
+  }, [isOpen, t.mapPickerNotConfigured]);
+
+  useEffect(() => {
+    if (!isOpen || !mapReady || !mapRef.current || !markerRef.current) {
+      return;
+    }
+
+    const center = getInitialMapCenter(form.latitude, form.longitude);
+    markerRef.current.setPosition(center);
+    mapRef.current.panTo(center);
+  }, [form.latitude, form.longitude, isOpen, mapReady]);
 
   const handleFieldChange = (event) => {
     const { name, value } = event.target;
@@ -515,6 +699,15 @@ export default function InternetRegistrationCta({ locale = "en", servicesHref = 
                     >
                       {t.openMap}
                     </button>
+                  </div>
+
+                  <div className="mt-4 space-y-2">
+                    <p className="text-sm font-semibold text-slate-800">{t.mapPickerTitle}</p>
+                    <p className="text-xs text-slate-500">{t.mapPickerHelp}</p>
+                    <div className="overflow-hidden rounded-xl border border-slate-200 bg-slate-100">
+                      <div ref={mapContainerRef} className="h-64 w-full" />
+                    </div>
+                    {mapError && <p className="text-xs text-amber-600">{mapError}</p>}
                   </div>
 
                   <div className="mt-4 grid gap-3">
