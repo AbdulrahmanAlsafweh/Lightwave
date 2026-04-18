@@ -1,3 +1,5 @@
+import Image from "next/image";
+
 export default function Footer({ strings, badgeSet = [] }) {
   const year = new Date().getFullYear();
 
@@ -24,8 +26,7 @@ export default function Footer({ strings, badgeSet = [] }) {
           <div className="space-y-4">
             <div className="inline-flex items-center gap-3 rounded-2xl border border-slate-200 bg-white px-3 py-2 shadow-glow">
               <div className="relative h-10 w-10 overflow-hidden rounded-xl border border-slate-200 bg-white">
-                <div className="absolute inset-0 bg-gradient-to-br from-brand-primary to-brand-light opacity-20" />
-                <div className="relative flex h-full w-full items-center justify-center text-sm font-bold text-brand-primary">LW</div>
+                <Image src="/assets/logo.png" alt={`${brandName} logo`} fill sizes="40px" className="object-contain p-1.5" />
               </div>
               <div>
                 <p className="text-lg font-semibold text-slate-900">{brandName}</p>
@@ -34,7 +35,7 @@ export default function Footer({ strings, badgeSet = [] }) {
             </div>
             {blurb ? <p className="max-w-xs text-sm text-slate-600">{blurb}</p> : null}
             {badgeSet?.length ? (
-              <div className="flex gap-2">
+              <div className="flex flex-wrap gap-2">
                 {badgeSet.map((badge) => (
                   <span key={badge} className="badge-soft text-[11px]">
                     {badge}

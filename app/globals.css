@@ -46,7 +46,11 @@ body {
 .badge-soft {
   display: inline-flex;
   align-items: center;
+  justify-content: center;
   width: fit-content;
+  max-width: 100%;
+  flex-shrink: 0;
+  white-space: nowrap;
   background: linear-gradient(90deg, rgba(13, 102, 208, 0.12), rgba(31, 135, 233, 0.12));
   border: 1px solid rgba(13, 102, 208, 0.18);
   color: #0d66d0;
