@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { motion } from "framer-motion";
 import Image from "next/image";
+import InternetRegistrationCta from "@/components/InternetRegistrationCta";
 
 const fadeUp = {
   hidden: { opacity: 0, y: 32 },
@@ -194,6 +195,8 @@ export default function Home() {
           </motion.div>
         </motion.div>
       </section>
+
+      <InternetRegistrationCta locale="en" servicesHref="/en/services" />
 
       <section id="services" className="px-6 py-14">
         <div className="mx-auto flex max-w-6xl flex-col gap-8">
