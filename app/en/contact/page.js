@@ -65,9 +65,9 @@ export default function Contact() {
             <div className="glass-panel space-y-3 border border-slate-200 p-6">
               <h2 className="text-2xl font-semibold text-slate-900">Call or visit</h2>
               <p className="text-sm text-slate-600">
-                Phone: +963 (0)11 555 1234
+                Phone: +963961110855
                 <br />
-                Email: hello@lightwave.sy
+                Email: info@lightwaveltd.com
                 <br />
                 HQ: Idlib, Syria
               </p>

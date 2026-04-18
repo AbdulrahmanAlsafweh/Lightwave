@@ -15,7 +15,7 @@ const orgJsonLd = {
   contactPoint: [
     {
       "@type": "ContactPoint",
-      telephone: "+963115551234",
+      telephone: "+963961110855",
       contactType: "customer service",
       areaServed: "SY",
       availableLanguage: ["en", "ar"],

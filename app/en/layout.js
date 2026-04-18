@@ -29,8 +29,8 @@ const footerStringsEn = {
   ],
   contactTitle: "Contact",
   contact: [
-    "Phone: +963 (0)11 555 1234",
-    "Email: hello@lightwave.sy",
+    "Phone: +963961110855",
+    "Email: info@lightwaveltd.com",
     "HQ: Damascus, Syria",
     "Support: 24/7 • Arabic & English",
   ],

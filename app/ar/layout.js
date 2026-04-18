@@ -73,7 +73,7 @@ const footerStringsAr = {
   servicesTitle: "الخدمات",
   services: ["إنترنت الألياف (FTTH)", "نت بلاي للبث", "IPTV والقنوات المباشرة", "أجهزة الراوتر والواي فاي"],
   contactTitle: "تواصل",
-  contact: ["هاتف: ‎+963 (0)11 555 1234", "البريد: hello@lightwave.sy", "المقر: دمشق، سوريا", "دعم 24/7 · عربي وإنكليزي"],
+  contact: ["هاتف: ‎+963961110855", "البريد: info@lightwaveltd.com", "المقر: دمشق، سوريا", "دعم 24/7 · عربي وإنكليزي"],
   rightsText: `© ${new Date().getFullYear()} لايت ويف. جميع الحقوق محفوظة.`,
 };
 

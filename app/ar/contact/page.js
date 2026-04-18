@@ -64,9 +64,9 @@ export default function ContactAr() {
             <div className="glass-panel space-y-3 border border-slate-200 p-6">
               <h2 className="text-2xl font-semibold text-slate-900">اتصل أو زرنا</h2>
               <p className="text-sm text-slate-600">
-                هاتف: ‎+963 (0)11 555 1234
+                هاتف: ‎+963961110855
                 <br />
-                بريد: hello@lightwave.sy
+                بريد: info@lightwaveltd.com
                 <br />
                 المقر: إدلب، سوريا
               </p>
