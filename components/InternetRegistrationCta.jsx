@@ -4,8 +4,7 @@ import { AnimatePresence, motion } from "framer-motion";
 import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
 
-const REGISTRATION_ENDPOINT = process.env.NEXT_PUBLIC_INTERNET_REGISTRATION_ENDPOINT || "";
-const DEFAULT_REGISTRATION_ENDPOINT = "http://radius.lightwaveltd.com/api/box-requests";
+const REGISTRATION_ENDPOINT = "/api/box-requests";
 
 const COUNTRY_CODES = [
   { code: "+963", en: "Syria (+963)", ar: "سوريا (+963)" },
@@ -157,7 +156,6 @@ function toNumber(value) {
 
 export default function InternetRegistrationCta({ locale = "en", servicesHref = "/en/services" }) {
   const t = locale === "ar" ? TEXT.ar : TEXT.en;
-  const endpoint = REGISTRATION_ENDPOINT || DEFAULT_REGISTRATION_ENDPOINT;
   const [isOpen, setIsOpen] = useState(false);
   const [form, setForm] = useState(initialForm);
   const [status, setStatus] = useState("idle");
@@ -258,7 +256,7 @@ export default function InternetRegistrationCta({ locale = "en", servicesHref = 
     };
 
     try {
-      const response = await fetch(endpoint, {
+      const response = await fetch(REGISTRATION_ENDPOINT, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -267,16 +265,30 @@ export default function InternetRegistrationCta({ locale = "en", servicesHref = 
         body: JSON.stringify(payload),
       });
 
+      const responseText = await response.text();
+      let responseData = null;
+      try {
+        responseData = responseText ? JSON.parse(responseText) : null;
+      } catch {
+        responseData = null;
+      }
+
       if (!response.ok) {
-        throw new Error(`HTTP ${response.status}`);
+        const apiMessage =
+          responseData?.message ||
+          responseData?.error ||
+          responseText ||
+          `HTTP ${response.status}`;
+        throw new Error(apiMessage);
       }
 
       setStatus("success");
       setFeedback(t.submitSuccess);
       setForm(initialForm);
-    } catch {
+    } catch (error) {
       setStatus("error");
-      setFeedback(t.submitError);
+      const details = error?.message ? ` (${error.message})` : "";
+      setFeedback(`${t.submitError}${details}`);
     }
   };
 
