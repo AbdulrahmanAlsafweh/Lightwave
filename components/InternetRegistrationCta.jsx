@@ -296,7 +296,6 @@ export default function InternetRegistrationCta({ locale = "en", servicesHref = 
     <>
       <section className="px-6 pb-8">
         <div className="relative mx-auto max-w-6xl overflow-hidden rounded-3xl border border-slate-200 bg-gradient-to-r from-white via-brand-soft to-white p-8 shadow-card">
-          <div className="pointer-events-none absolute inset-0 z-0 pattern-strong" aria-hidden />
           <div className="relative z-10 flex flex-col gap-6 md:flex-row md:items-center md:justify-between">
             <div className="space-y-3">
               <p className="badge-soft text-xs">{t.sectionBadge}</p>
