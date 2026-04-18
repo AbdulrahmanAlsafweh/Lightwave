@@ -25,6 +25,17 @@ const TEXT = {
       "Start your request in under two minutes. Share your name, phone, and exact location so our team can verify coverage and contact you quickly.",
     sectionPrimaryButton: "Register Now",
     sectionSecondaryButton: "View Fiber Services",
+    sectionHighlights: ["Coverage verification", "Fast callback from our team", "Installation scheduling"],
+    sectionFlowTitle: "What Happens Next",
+    sectionFlowSteps: [
+      "Open the form and submit your details.",
+      "Add the exact map pin and detailed address.",
+      "Our team reviews and contacts you to confirm installation.",
+    ],
+    sectionFactOneValue: "Under 15 min",
+    sectionFactOneLabel: "First callback",
+    sectionFactTwoValue: "Same day",
+    sectionFactTwoLabel: "Coverage validation",
     modalTitle: "Internet Service Registration",
     modalSubtitle: "Complete the form and we will prepare your request for processing.",
     firstName: "First Name",
@@ -61,6 +72,17 @@ const TEXT = {
       "ابدأ طلبك خلال أقل من دقيقتين. شارك الاسم ورقم الهاتف والموقع الدقيق ليتواصل فريقنا معك بسرعة ويؤكد التغطية.",
     sectionPrimaryButton: "سجل الآن",
     sectionSecondaryButton: "عرض خدمات الألياف",
+    sectionHighlights: ["تأكيد التغطية", "اتصال سريع من فريقنا", "تنسيق موعد التركيب"],
+    sectionFlowTitle: "ماذا يحدث بعد الإرسال",
+    sectionFlowSteps: [
+      "افتح النموذج وأرسل بياناتك.",
+      "أضف موقعك الدقيق على الخريطة مع العنوان التفصيلي.",
+      "يراجع فريقنا الطلب ويتواصل معك لتأكيد التركيب.",
+    ],
+    sectionFactOneValue: "أقل من 15 دقيقة",
+    sectionFactOneLabel: "أول اتصال",
+    sectionFactTwoValue: "نفس اليوم",
+    sectionFactTwoLabel: "تأكيد التغطية",
     modalTitle: "نموذج تسجيل خدمة الإنترنت",
     modalSubtitle: "أكمل البيانات وسنجهز الطلب للمعالجة مباشرة.",
     firstName: "الاسم الأول",
@@ -288,32 +310,80 @@ export default function InternetRegistrationCta({ locale = "en", servicesHref = 
 
   return (
     <>
-      <section className="px-6 pb-8">
-        <div className="relative mx-auto max-w-6xl overflow-hidden rounded-3xl border border-slate-200 bg-gradient-to-r from-white via-brand-soft to-white p-8 shadow-card">
-          <div className="relative z-10 flex flex-col gap-6 md:flex-row md:items-center md:justify-between">
-            <div className="space-y-3">
-              <p className="badge-soft text-xs">{t.sectionBadge}</p>
-              <h2 className="text-3xl font-semibold text-slate-900 md:text-4xl">{t.sectionTitle}</h2>
-              <p className="max-w-2xl text-slate-600">{t.sectionDescription}</p>
+      <section className="px-6 pb-10">
+        <div className="relative mx-auto max-w-6xl overflow-hidden rounded-[2rem] border border-slate-200 bg-white p-8 shadow-card sm:p-10">
+          <div
+            className="pointer-events-none absolute -left-14 top-0 h-44 w-44 rounded-full bg-brand-soft/80 blur-3xl"
+            aria-hidden="true"
+          />
+          <div
+            className="pointer-events-none absolute -right-12 bottom-0 h-52 w-52 rounded-full bg-brand-light/50 blur-3xl"
+            aria-hidden="true"
+          />
+          <div className="pointer-events-none absolute inset-0 bg-gradient-to-r from-white via-white/80 to-brand-soft/40" aria-hidden />
+          <div className="relative z-10 grid gap-8 lg:grid-cols-[1.15fr,0.85fr] lg:items-center">
+            <div className="space-y-6">
+              <div className="space-y-3">
+                <p className="badge-soft w-fit text-xs">{t.sectionBadge}</p>
+                <h2 className="text-3xl font-semibold text-slate-900 md:text-5xl">{t.sectionTitle}</h2>
+                <p className="max-w-2xl text-base text-slate-600 md:text-lg">{t.sectionDescription}</p>
+              </div>
+
+              <div className="grid gap-3 sm:grid-cols-2">
+                {t.sectionHighlights.map((highlight) => (
+                  <div key={highlight} className="rounded-xl border border-slate-200 bg-white/80 px-4 py-3 text-sm font-medium text-slate-700">
+                    <span className="inline-flex items-center gap-2">
+                      <span className="h-2 w-2 rounded-full bg-brand-primary" />
+                      {highlight}
+                    </span>
+                  </div>
+                ))}
+              </div>
+
+              <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
+                <button
+                  type="button"
+                  onClick={() => {
+                    setFeedback("");
+                    setStatus("idle");
+                    setIsOpen(true);
+                  }}
+                  className="rounded-full bg-brand-primary px-6 py-3 text-sm font-semibold text-white shadow-glow transition hover:-translate-y-0.5"
+                >
+                  {t.sectionPrimaryButton}
+                </button>
+                <Link
+                  href={servicesHref}
+                  className="rounded-full border border-slate-200 px-6 py-3 text-center text-sm font-semibold text-slate-800 transition hover:border-brand-primary hover:text-brand-primary"
+                >
+                  {t.sectionSecondaryButton}
+                </Link>
+              </div>
             </div>
-            <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
-              <button
-                type="button"
-                onClick={() => {
-                  setFeedback("");
-                  setStatus("idle");
-                  setIsOpen(true);
-                }}
-                className="rounded-full bg-brand-primary px-5 py-3 text-sm font-semibold text-white shadow-glow transition hover:-translate-y-0.5"
-              >
-                {t.sectionPrimaryButton}
-              </button>
-              <Link
-                href={servicesHref}
-                className="rounded-full border border-slate-200 px-5 py-3 text-center text-sm font-semibold text-slate-800 transition hover:border-brand-primary hover:text-brand-primary"
-              >
-                {t.sectionSecondaryButton}
-              </Link>
+
+            <div className="glass-panel border border-slate-200 bg-white/90 p-6">
+              <p className="text-sm font-semibold uppercase tracking-wide text-brand-primary">{t.sectionFlowTitle}</p>
+              <div className="mt-4 space-y-3">
+                {t.sectionFlowSteps.map((step, index) => (
+                  <div key={step} className="flex items-start gap-3 rounded-xl border border-slate-200 bg-white px-3 py-3">
+                    <span className="mt-0.5 inline-flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-brand-soft text-xs font-semibold text-brand-primary">
+                      {index + 1}
+                    </span>
+                    <p className="text-sm text-slate-700">{step}</p>
+                  </div>
+                ))}
+              </div>
+
+              <div className="mt-4 grid grid-cols-2 gap-3">
+                <div className="rounded-xl border border-slate-200 bg-brand-soft p-3">
+                  <p className="text-lg font-semibold text-slate-900">{t.sectionFactOneValue}</p>
+                  <p className="text-xs text-slate-600">{t.sectionFactOneLabel}</p>
+                </div>
+                <div className="rounded-xl border border-slate-200 bg-brand-soft p-3">
+                  <p className="text-lg font-semibold text-slate-900">{t.sectionFactTwoValue}</p>
+                  <p className="text-xs text-slate-600">{t.sectionFactTwoLabel}</p>
+                </div>
+              </div>
             </div>
           </div>
         </div>
