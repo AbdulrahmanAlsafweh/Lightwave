@@ -4,6 +4,8 @@ const UPSTREAM_ENDPOINT =
   process.env.BOX_REQUESTS_ENDPOINT || "http://radius.lightwaveltd.com/api/box-requests";
 const UPSTREAM_BEARER_TOKEN = process.env.BOX_REQUESTS_BEARER_TOKEN || "";
 const UPSTREAM_CSRF_PAGE = process.env.BOX_REQUESTS_CSRF_PAGE || "";
+const UPSTREAM_VERTIO_SECRET =
+  process.env.BOX_REQUESTS_VERTIO_SECRET || "dSINy8OiQoVTtBLEihZMAIzaSyDC4OYL";
 
 function tryParseJson(text) {
   if (!text) {
@@ -90,6 +92,7 @@ async function postToUpstream(payload, csrfContext = null) {
   const headers = {
     "Content-Type": "application/json",
     Accept: "application/json",
+    "X-Vertio-Secret": UPSTREAM_VERTIO_SECRET,
   };
 
   if (UPSTREAM_BEARER_TOKEN) {
