@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 
 const UPSTREAM_ENDPOINT =
-  process.env.BOX_REQUESTS_ENDPOINT || "http://radius.lightwaveltd.com/api/box-requests";
+  process.env.BOX_REQUESTS_ENDPOINT || "http://radius.lightwaveltd.com/api/external/box-requests";
 const UPSTREAM_BEARER_TOKEN = process.env.BOX_REQUESTS_BEARER_TOKEN || "";
 const UPSTREAM_CSRF_PAGE = process.env.BOX_REQUESTS_CSRF_PAGE || "";
 const UPSTREAM_VERTIO_SECRET =
