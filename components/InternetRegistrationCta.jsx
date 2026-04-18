@@ -46,8 +46,6 @@ const TEXT = {
     detailedLocationPlaceholder: "Street, building, floor, landmark...",
     additionalNote: "Additional Note",
     additionalNotePlaceholder: "Any extra details for installation (optional)",
-    locationLabel: "Location Label",
-    locationLabelPlaceholder: "City / area (example: Saida - Downtown)",
     cancel: "Cancel",
     submit: "Submit Registration",
     submitting: "Submitting...",
@@ -84,8 +82,6 @@ const TEXT = {
     detailedLocationPlaceholder: "الشارع، البناء، الطابق، أقرب نقطة دالة...",
     additionalNote: "ملاحظة إضافية",
     additionalNotePlaceholder: "أي تفاصيل إضافية للتركيب (اختياري)",
-    locationLabel: "وصف الموقع",
-    locationLabelPlaceholder: "المدينة / المنطقة (مثال: صيدا - وسط البلد)",
     cancel: "إغلاق",
     submit: "إرسال الطلب",
     submitting: "جاري الإرسال...",
@@ -106,7 +102,6 @@ const initialForm = {
   mapInput: "",
   latitude: "",
   longitude: "",
-  locationLabel: "",
   detailedLocation: "",
   additionalNote: "",
 };
@@ -243,16 +238,15 @@ export default function InternetRegistrationCta({ locale = "en", servicesHref = 
     }
 
     const payload = {
-      full_name: form.firstName.trim(),
-      father_name: form.fatherName.trim(),
-      mother_name: form.motherName.trim(),
-      surname: form.lastName.trim(),
+      firstname: form.firstName.trim(),
+      fathername: form.fatherName.trim(),
+      mothername: form.motherName.trim(),
+      lastname: form.lastName.trim(),
       phone: `${form.countryCode} ${form.phoneNumber.trim()}`,
-      location_label: form.locationLabel.trim(),
-      address: form.detailedLocation.trim(),
-      latitude,
-      longitude,
-      notes: form.additionalNote.trim() || null,
+      lat: latitude,
+      long: longitude,
+      detailed_location: form.detailedLocation.trim(),
+      additional_note: form.additionalNote.trim(),
     };
 
     try {
@@ -502,18 +496,6 @@ export default function InternetRegistrationCta({ locale = "en", servicesHref = 
                     </label>
                   </div>
                 </div>
-
-                <label className="space-y-1 text-sm text-slate-800">
-                  {t.locationLabel}
-                  <input
-                    required
-                    name="locationLabel"
-                    value={form.locationLabel}
-                    onChange={handleFieldChange}
-                    placeholder={t.locationLabelPlaceholder}
-                    className="mt-1 w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm text-slate-900 focus:border-brand-primary focus:outline-none"
-                  />
-                </label>
 
                 <label className="space-y-1 text-sm text-slate-800">
                   {t.detailedLocation}
