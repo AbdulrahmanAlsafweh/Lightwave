@@ -42,7 +42,6 @@ const TEXT = {
     modalSubtitle: "Complete the form and we will prepare your request for processing.",
     firstName: "First Name",
     fatherName: "Father Name",
-    motherName: "Mother Name",
     lastName: "Last Name",
     phoneLabel: "Phone Number",
     countryCode: "Country Code",
@@ -56,9 +55,6 @@ const TEXT = {
       "Interactive map picker needs NEXT_PUBLIC_GOOGLE_MAPS_API_KEY. You can still paste a link or coordinates.",
     mapInput: "Google Maps Link or Coordinates",
     mapInputPlaceholder: "Example: https://maps.google.com/... or 34.44240359569981, 35.87057300261932",
-    extractCoordinates: "Extract Coordinates",
-    latitude: "Latitude",
-    longitude: "Longitude",
     detailedLocation: "Detailed Location",
     detailedLocationPlaceholder: "Street, building, floor, landmark...",
     additionalNote: "Additional Note",
@@ -69,7 +65,7 @@ const TEXT = {
     submitSuccess: "Registration submitted successfully.",
     submitError: "Unable to submit right now. Please try again.",
     mapError: "Could not read coordinates from this input. Paste a valid map link or coordinates.",
-    latLngRequired: "Latitude and longitude are required.",
+    mapInputRequired: "Google Maps link or coordinates are required.",
   },
   ar: {
     sectionBadge: "طلب اشتراك الإنترنت",
@@ -93,7 +89,6 @@ const TEXT = {
     modalSubtitle: "أكمل البيانات وسنجهز الطلب للمعالجة مباشرة.",
     firstName: "الاسم الأول",
     fatherName: "اسم الأب",
-    motherName: "اسم الأم",
     lastName: "اسم العائلة",
     phoneLabel: "رقم الهاتف",
     countryCode: "مفتاح الدولة",
@@ -107,9 +102,6 @@ const TEXT = {
       "ميزة اختيار الموقع من الخريطة تحتاج NEXT_PUBLIC_GOOGLE_MAPS_API_KEY. ما يزال بإمكانك لصق الرابط أو الإحداثيات.",
     mapInput: "رابط Google Maps أو الإحداثيات",
     mapInputPlaceholder: "مثال: https://maps.google.com/... أو 34.44240359569981, 35.87057300261932",
-    extractCoordinates: "استخراج الإحداثيات",
-    latitude: "خط العرض",
-    longitude: "خط الطول",
     detailedLocation: "العنوان التفصيلي",
     detailedLocationPlaceholder: "الشارع، البناء، الطابق، أقرب نقطة دالة...",
     additionalNote: "ملاحظة إضافية",
@@ -120,20 +112,17 @@ const TEXT = {
     submitSuccess: "تم إرسال طلب التسجيل بنجاح.",
     submitError: "تعذر الإرسال حاليًا. حاول مرة أخرى.",
     mapError: "لم نتمكن من قراءة الإحداثيات من هذه القيمة. الصق رابطًا صحيحًا أو إحداثيات مباشرة.",
-    latLngRequired: "خط العرض وخط الطول مطلوبان.",
+    mapInputRequired: "رابط Google Maps أو الإحداثيات مطلوب.",
   },
 };
 
 const initialForm = {
   firstName: "",
   fatherName: "",
-  motherName: "",
   lastName: "",
   countryCode: "+963",
   phoneNumber: "",
   mapInput: "",
-  latitude: "",
-  longitude: "",
   detailedLocation: "",
   additionalNote: "",
 };
@@ -181,9 +170,14 @@ function toNumber(value) {
   return Number.isNaN(parsed) ? null : parsed;
 }
 
-function getInitialMapCenter(latitudeInput, longitudeInput) {
-  const latitude = toNumber(latitudeInput);
-  const longitude = toNumber(longitudeInput);
+function getInitialMapCenter(mapInput) {
+  const parsed = extractCoordinates(mapInput);
+  if (!parsed) {
+    return DEFAULT_MAP_CENTER;
+  }
+
+  const latitude = toNumber(parsed.latitude);
+  const longitude = toNumber(parsed.longitude);
 
   if (
     latitude !== null &&
@@ -311,7 +305,7 @@ export default function InternetRegistrationCta({ locale = "en", servicesHref = 
           return;
         }
 
-        const initialCenter = getInitialMapCenter(form.latitude, form.longitude);
+        const initialCenter = getInitialMapCenter(form.mapInput);
 
         if (!mapRef.current) {
           mapRef.current = new window.google.maps.Map(mapContainerRef.current, {
@@ -348,8 +342,6 @@ export default function InternetRegistrationCta({ locale = "en", servicesHref = 
           setFeedback("");
           setForm((previous) => ({
             ...previous,
-            latitude: String(lat),
-            longitude: String(lng),
             mapInput: `${lat}, ${lng}`,
           }));
         });
@@ -365,8 +357,6 @@ export default function InternetRegistrationCta({ locale = "en", servicesHref = 
           setFeedback("");
           setForm((previous) => ({
             ...previous,
-            latitude: String(lat),
-            longitude: String(lng),
             mapInput: `${lat}, ${lng}`,
           }));
         });
@@ -392,32 +382,31 @@ export default function InternetRegistrationCta({ locale = "en", servicesHref = 
       return;
     }
 
-    const center = getInitialMapCenter(form.latitude, form.longitude);
+    const parsed = extractCoordinates(form.mapInput);
+    if (!parsed) {
+      return;
+    }
+
+    const latitude = toNumber(parsed.latitude);
+    const longitude = toNumber(parsed.longitude);
+
+    if (
+      latitude === null ||
+      longitude === null ||
+      Math.abs(latitude) > 90 ||
+      Math.abs(longitude) > 180
+    ) {
+      return;
+    }
+
+    const center = { lat: latitude, lng: longitude };
     markerRef.current.setPosition(center);
     mapRef.current.panTo(center);
-  }, [form.latitude, form.longitude, isOpen, mapReady]);
+  }, [form.mapInput, isOpen, mapReady]);
 
   const handleFieldChange = (event) => {
     const { name, value } = event.target;
     setForm((previous) => ({ ...previous, [name]: value }));
-  };
-
-  const handleExtractCoordinates = () => {
-    const parsed = extractCoordinates(form.mapInput);
-
-    if (!parsed) {
-      setStatus("error");
-      setFeedback(t.mapError);
-      return;
-    }
-
-    setStatus("idle");
-    setForm((previous) => ({
-      ...previous,
-      latitude: parsed.latitude,
-      longitude: parsed.longitude,
-    }));
-    setFeedback("");
   };
 
   const openGoogleMaps = () => {
@@ -429,8 +418,21 @@ export default function InternetRegistrationCta({ locale = "en", servicesHref = 
     setStatus("loading");
     setFeedback("");
 
-    const latitude = toNumber(form.latitude);
-    const longitude = toNumber(form.longitude);
+    if (!form.mapInput.trim()) {
+      setStatus("error");
+      setFeedback(t.mapInputRequired);
+      return;
+    }
+
+    const parsedCoordinates = extractCoordinates(form.mapInput);
+    if (!parsedCoordinates) {
+      setStatus("error");
+      setFeedback(t.mapError);
+      return;
+    }
+
+    const latitude = toNumber(parsedCoordinates.latitude);
+    const longitude = toNumber(parsedCoordinates.longitude);
 
     if (
       latitude === null ||
@@ -439,14 +441,13 @@ export default function InternetRegistrationCta({ locale = "en", servicesHref = 
       Math.abs(longitude) > 180
     ) {
       setStatus("error");
-      setFeedback(t.latLngRequired);
+      setFeedback(t.mapError);
       return;
     }
 
     const payload = {
       firstname: form.firstName.trim(),
       fathername: form.fatherName.trim(),
-      mothername: form.motherName.trim(),
       lastname: form.lastName.trim(),
       phone: `${form.countryCode} ${form.phoneNumber.trim()}`,
       lat: latitude,
@@ -612,7 +613,6 @@ export default function InternetRegistrationCta({ locale = "en", servicesHref = 
                   <label className="space-y-1 text-sm text-slate-800">
                     {t.firstName}
                     <input
-                      required
                       name="firstName"
                       value={form.firstName}
                       onChange={handleFieldChange}
@@ -623,7 +623,6 @@ export default function InternetRegistrationCta({ locale = "en", servicesHref = 
                   <label className="space-y-1 text-sm text-slate-800">
                     {t.fatherName}
                     <input
-                      required
                       name="fatherName"
                       value={form.fatherName}
                       onChange={handleFieldChange}
@@ -632,20 +631,8 @@ export default function InternetRegistrationCta({ locale = "en", servicesHref = 
                   </label>
 
                   <label className="space-y-1 text-sm text-slate-800">
-                    {t.motherName}
-                    <input
-                      required
-                      name="motherName"
-                      value={form.motherName}
-                      onChange={handleFieldChange}
-                      className="mt-1 w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm text-slate-900 focus:border-brand-primary focus:outline-none"
-                    />
-                  </label>
-
-                  <label className="space-y-1 text-sm text-slate-800">
                     {t.lastName}
                     <input
-                      required
                       name="lastName"
                       value={form.lastName}
                       onChange={handleFieldChange}
@@ -714,46 +701,11 @@ export default function InternetRegistrationCta({ locale = "en", servicesHref = 
                     <label className="space-y-1 text-sm text-slate-800">
                       {t.mapInput}
                       <input
+                        required
                         name="mapInput"
                         value={form.mapInput}
                         onChange={handleFieldChange}
                         placeholder={t.mapInputPlaceholder}
-                        className="mt-1 w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm text-slate-900 focus:border-brand-primary focus:outline-none"
-                      />
-                    </label>
-                    <div className="flex justify-start">
-                      <button
-                        type="button"
-                        onClick={handleExtractCoordinates}
-                        className="rounded-full border border-slate-200 bg-white px-4 py-2 text-xs font-semibold text-slate-700 transition hover:border-brand-primary hover:text-brand-primary"
-                      >
-                        {t.extractCoordinates}
-                      </button>
-                    </div>
-                  </div>
-
-                  <div className="mt-4 grid gap-3 sm:grid-cols-2">
-                    <label className="space-y-1 text-sm text-slate-800">
-                      {t.latitude}
-                      <input
-                        required
-                        name="latitude"
-                        value={form.latitude}
-                        onChange={handleFieldChange}
-                        inputMode="decimal"
-                        placeholder="34.44240359569981"
-                        className="mt-1 w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm text-slate-900 focus:border-brand-primary focus:outline-none"
-                      />
-                    </label>
-                    <label className="space-y-1 text-sm text-slate-800">
-                      {t.longitude}
-                      <input
-                        required
-                        name="longitude"
-                        value={form.longitude}
-                        onChange={handleFieldChange}
-                        inputMode="decimal"
-                        placeholder="35.87057300261932"
                         className="mt-1 w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm text-slate-900 focus:border-brand-primary focus:outline-none"
                       />
                     </label>
@@ -763,7 +715,6 @@ export default function InternetRegistrationCta({ locale = "en", servicesHref = 
                 <label className="space-y-1 text-sm text-slate-800">
                   {t.detailedLocation}
                   <textarea
-                    required
                     name="detailedLocation"
                     value={form.detailedLocation}
                     onChange={handleFieldChange}
